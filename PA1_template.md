@@ -11,6 +11,7 @@ activitydata<-read.csv("./dataset/activity.csv",head=T)
 #we should convert date column to Data class in r.
 activitydata$date<-as.Date(activitydata$date)
 ```
+
 The data set contain three column. Here is first few rows of this data set.
 
 ```r
@@ -25,12 +26,12 @@ head(activitydata,n=3)
 ```
 
 ## What is mean total number of steps taken per day?
-In order to compute mean total number of steps taken per day and to draw histogram, we should summarise activity data set according to date. According to the assignment, at this stage we can ignore incomplete data sets.
+In order to compute mean total number of steps taken per day and to draw histogram, we should summaries activity data set according to date. According to the assignment, at this stage we can ignore incomplete data sets.
 
 ```r
 newdataset1<-ddply(na.omit(activitydata),"date",summarise,totalsteps=sum(steps))
 ```
-Here is first few rows of this summarised data set.
+Here is first few rows of this summarized data set.
 
 ```r
 head(newdataset1,n=3)
@@ -50,7 +51,7 @@ qplot(x=newdataset1$date,y=newdataset1$totalsteps,geom="bar",stat="identity",xla
 
 ![plot of chunk unnamed-chunk-5](./PA1_template_files/figure-html/unnamed-chunk-5.png) 
 
-mean and median number of steps taken per day is calulated as follows:
+mean and median number of steps taken per day is calculated as follows:
 
 
 ```r
@@ -70,13 +71,13 @@ mediansteps<-median(newdataset1$totalsteps)
 ## What is the average daily activity pattern?
 
 In this section we should make a time series plot of the 5-minute interval (x-axis) vs the average number of steps taken, averaged across all days (y-axis). After that
- we should find the interval ID, which contains the maximum number of steps (when averaged across all days). To do that we should summaeaise data according to interval ID. At this stage, we can ignore missing values.
+ we should find the interval ID, which contains the maximum number of steps (when averaged across all days). To do that we should summarize data according to interval ID. At this stage, we can ignore missing values.
  
 
 ```r
  newdataset2<-ddply(na.omit(activitydata),"interval",summarise, avgsteps=mean(steps))
 ```
-Before we continue to analysis, here few rows of this summarised data set
+Before we continue to analysis, here few rows of this summarized data set
 
 ```r
 head(newdataset2, n=3)
@@ -88,7 +89,7 @@ head(newdataset2, n=3)
 ## 2        5   0.3396
 ## 3       10   0.1321
 ```
-Now we can draw the time series plot beween interval and average number of steps.
+Now we can draw the time series plot between interval and average number of steps.
 
 ```r
 qplot(x=newdataset2$interval,y=newdataset2$avgsteps,geom="line",stat="identity",xlab=expression(bold("Interval ID")), ylab =expression(bold(" Average Steps (across all days)")) )
@@ -124,7 +125,7 @@ totalmissingval
 ```
 
 ### Strategy to fill missing values
-Now we should devise a strategy to fill missing values. Before that we should try to understand the data set. First look at the interval ID. Interval id are like 0,5,10,...2355. Most intutive interpretation for these interval ID is it is time given according to 24 hour clock. So, "0" mean "12.00AM", "5" mean "12.05AM"...."2355"" mean "23:55PM". Now with this interpretation if we look at the time series plot in above (interval vs avgsteps ) we can see that from 12.00AM-5.00AM there are almost zero movements( due sleep ?). Then starting around 7.00AM, movements starts to increase. We also found above maximum number of movements occur at 835 interval(8.35AM ? may be becauae of daily walking exercise? ). If we use this intutive interpretaion of data set, then I think best way to **fill missing values of given interval ID is using mean of that interval ID taken across all days**. Now we can make new dataset with missing values filled.
+Now we should devise a strategy to fill missing values. Before that we should try to understand the data set. First look at the interval ID. Interval id are like 0,5,10,...2355. Most intuitive interpretation for these interval ID is it is time given according to 24 hour clock. So, "0" mean "12.00AM", "5" mean "12.05AM"...."2355"" mean "23:55PM". Now with this interpretation if we look at the time series plot in above (interval vs avgsteps ) we can see that from 12.00AM-5.00AM there are almost zero movements( due sleep ?). Then starting around 7.00AM, movements starts to increase. We also found above maximum number of movements occur at 835 interval(8.35AM ? may be because of daily walking exercise? ). If we use this intuitive interpretation of data set, then I think best way to **fill missing values of given interval ID is using mean of that interval ID taken across all days**. Now we can make new data set with missing values filled.
 
 
 ```r
@@ -165,7 +166,7 @@ qplot(x=newdataset3$date,y=newdataset3$totalsteps,geom="bar",stat="identity",xla
 
 ![plot of chunk unnamed-chunk-16](./PA1_template_files/figure-html/unnamed-chunk-16.png) 
 
-mean and median number of steps taken per day is calulated as follows:
+mean and median number of steps taken per day is calculated as follows:
 
 **mean total number of steps taken per day** = 
 
@@ -188,7 +189,7 @@ newmediansteps
 ## [1] 10766
 ```
 
-If we compare these values with first part of assignment, it is look like these estimates do not differe from previous one. So we can conclude, missing value does not have big impact on mean steps and median steps.
+If we compare these values with first part of assignment, it is look like these estimates do not differ from previous one. So we can conclude, missing value does not have big impact on mean steps and median steps.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 First we should create new factor variable, which identify date as "weekday" and "weekend". For this part of assignment, we should use data set we created in above.
@@ -223,4 +224,4 @@ xyplot(avgsteps~interval|isweekend, data=averagestepsdata, type= "l",layout=c(1,
 
 ![plot of chunk unnamed-chunk-21](./PA1_template_files/figure-html/unnamed-chunk-21.png) 
 
-Now according to graphs we can see that there is no significant diference in activity between weekdays and weekends(Eventhough there is more movements in weekends, patterns of activity look like more or less same). 
+Now according to graphs we can see that there is no significant difference in activity between weekdays and weekends(Even though there is more movements in weekends, patterns of activity look like more or less same). 
